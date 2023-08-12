@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "1.9.0"
+    `maven-publish`
 }
 
 group = "me.superpenguin.superglue"
@@ -16,4 +17,12 @@ dependencies {
 
 kotlin {
     jvmToolchain(17)
+}
+
+publishing.publications.create<MavenPublication>("maven") {
+    groupId = "me.superpenguin.superglue"
+    artifactId = "superfoundations"
+    version = "1.0.0"
+
+    from(components["java"])
 }
