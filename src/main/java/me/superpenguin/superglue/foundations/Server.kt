@@ -1,4 +1,4 @@
-package me.superpenguin.superglue.superfoundations
+package me.superpenguin.superglue.foundations
 
 object Server {
 

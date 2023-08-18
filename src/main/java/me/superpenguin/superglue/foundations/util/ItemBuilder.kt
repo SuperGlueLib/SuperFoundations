@@ -1,6 +1,6 @@
-package me.superpenguin.superglue.superfoundations.util
+package me.superpenguin.superglue.foundations.util
 
-import me.superpenguin.superglue.superfoundations.toColour
+import me.superpenguin.superglue.foundations.toColour
 import org.bukkit.Bukkit
 import org.bukkit.Color
 import org.bukkit.Material

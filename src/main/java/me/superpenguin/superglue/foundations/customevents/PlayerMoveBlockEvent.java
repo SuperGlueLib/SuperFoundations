@@ -1,4 +1,4 @@
-package me.superpenguin.superglue.superfoundations.customevents;
+package me.superpenguin.superglue.foundations.customevents;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

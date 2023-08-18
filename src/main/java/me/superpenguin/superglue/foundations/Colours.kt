@@ -1,4 +1,4 @@
-package me.superpenguin.superglue.superfoundations
+package me.superpenguin.superglue.foundations
 
 import org.bukkit.ChatColor
 import java.util.regex.Matcher

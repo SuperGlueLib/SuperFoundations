@@ -1,4 +1,4 @@
-package me.superpenguin.superglue.superfoundations
+package me.superpenguin.superglue.foundations
 
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
