@@ -1,5 +1,6 @@
 package me.superpenguin.superglue.foundations
 
+import me.superpenguin.superglue.foundations.extensions.toColor
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
