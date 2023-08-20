@@ -12,7 +12,7 @@ private val COLOR_REGEX = "(?i)[&$COLOR_CHAR][0-9a-fk-orx]".toRegex()
 fun String.toColor() = toColor(false)
 
 fun String.toColor(hex: Boolean = false) = ChatColor.translateAlternateColorCodes('&', this).let { if (hex) toHexColor(true) else it }
-fun String.stripColur() = ChatColor.stripColor(this)!!.remove(COLOR_REGEX)
+fun String.stripColor() = ChatColor.stripColor(this)!!.remove(COLOR_REGEX)
 
 // Hex
 private fun String.toHexColor(includeAmpersand: Boolean = false): String {
