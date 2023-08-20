@@ -1,22 +1,22 @@
-package me.superpenguin.superglue.foundations
+package me.superpenguin.superglue.foundations.extensions
 
 import org.bukkit.ChatColor
 import java.util.regex.Matcher
 
 private const val COLOR_CHAR = '\u00A7'
-private val ampersandhexregex = "&#([A-Fa-f0-9]{6})".toRegex()
-private val hexregex = "(?i)#([a-f0-9]{6})".toRegex()
-private val COLOUR_REGEX = "(?i)[&$COLOR_CHAR][0-9a-fk-orx]".toRegex()
+private val ampersAndHexRegex = "&#([A-Fa-f0-9]{6})".toRegex()
+private val hexRegex = "(?i)#([a-f0-9]{6})".toRegex()
+private val COLOR_REGEX = "(?i)[&$COLOR_CHAR][0-9a-fk-orx]".toRegex()
 
 /** Provides java Support for optional hex attribute */
-fun String.toColour() = toColour(false)
+fun String.toColor() = toColor(false)
 
-fun String.toColour(hex: Boolean = false) = ChatColor.translateAlternateColorCodes('&', this).let { if (hex) toHexColor(true) else it }
-fun String.stripColour() = ChatColor.stripColor(this)!!.remove(COLOUR_REGEX)
+fun String.toColor(hex: Boolean = false) = ChatColor.translateAlternateColorCodes('&', this).let { if (hex) toHexColor(true) else it }
+fun String.stripColor() = ChatColor.stripColor(this)!!.remove(COLOR_REGEX)
 
 // Hex
 private fun String.toHexColor(includeAmpersand: Boolean = false): String {
-    val matcher: Matcher = (if (includeAmpersand) ampersandhexregex else hexregex).toPattern().matcher(this.toColour())
+    val matcher: Matcher = (if (includeAmpersand) ampersAndHexRegex else hexRegex).toPattern().matcher(this.toColor())
     val buffer = StringBuffer(length + 4 * 8)
     while (matcher.find()) {
         val group: String = matcher.group(1)
