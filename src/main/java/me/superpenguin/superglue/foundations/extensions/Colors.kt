@@ -1,6 +1,5 @@
 package me.superpenguin.superglue.foundations.extensions
 
-import me.superpenguin.superglue.foundations.remove
 import org.bukkit.ChatColor
 import java.util.regex.Matcher
 
