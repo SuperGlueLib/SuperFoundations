@@ -1,6 +1,6 @@
 package me.superpenguin.superglue.foundations.util
 
-import me.superpenguin.superglue.foundations.toColour
+import me.superpenguin.superglue.foundations.toColor
 import org.bukkit.Bukkit
 import org.bukkit.Color
 import org.bukkit.Material
@@ -51,8 +51,8 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
     fun build(): ItemStack {
         val stack = ItemStack(type, amount);
         val meta = stack.itemMeta!!
-        if (name != null) meta.setDisplayName(name!!.toColour(useHex))
-        if (lore != null) meta.lore = lore!!.map { it.toColour(useHex) }
+        if (name != null) meta.setDisplayName(name!!.toColor(useHex))
+        if (lore != null) meta.lore = lore!!.map { it.toColor(useHex) }
         locname?.let(meta::setLocalizedName)
         unbreakable?.let(meta::setUnbreakable)
         if (persistentInts.isNotEmpty()) persistentInts.forEach { meta.persistentDataContainer[it.first, PersistentDataType.INTEGER] = it.second }
