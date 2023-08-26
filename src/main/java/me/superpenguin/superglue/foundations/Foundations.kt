@@ -53,6 +53,9 @@ fun <K, V> Map<K, V>.toHashMap() = HashMap(this)
 
 /** Easy Listener registering :D */
 fun Listener.register(plugin: JavaPlugin) = Bukkit.getPluginManager().registerEvents(this, plugin)
+/** Easy mass listener registering */
+fun JavaPlugin.registerListeners(vararg listeners: Listener) = Bukkit.getPluginManager().let { manager -> listeners.forEach { manager.registerEvents(it, this@registerListeners) } }
+
 /** Checks if player click was in top inventory not bottom inventory */
 fun InventoryClickEvent.clickedTopInventory() = clickedInventory?.equals(view.topInventory) == true
 
