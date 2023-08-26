@@ -14,7 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 
 /** Send a coloured message to a player */
-fun CommandSender.send(msg: String, hex: Boolean = false) = sendMessage(msg.toColour(hex))
+fun CommandSender.send(msg: String, hex: Boolean = false) = sendMessage(msg.toColor(hex))
 
 // A bunch of useful string methods.
 fun String.toIntOrElse(default: Int): Int = this.toIntOrNull() ?: default
