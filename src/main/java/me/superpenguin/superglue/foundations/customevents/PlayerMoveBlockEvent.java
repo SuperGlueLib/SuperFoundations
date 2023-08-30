@@ -15,10 +15,11 @@ import org.jetbrains.annotations.NotNull;
 
 public class PlayerMoveBlockEvent extends PlayerMoveEvent {
 
-    private static HandlerList HANDLERS_LIST = new HandlerList();
-    public static HandlerList getHandlerList() { return HANDLERS_LIST; }
     @Override
     public HandlerList getHandlers() { return HANDLERS_LIST; }
+    private static HandlerList HANDLERS_LIST = new HandlerList();
+    public static HandlerList getHandlerList() { return HANDLERS_LIST; }
+
 
     public PlayerMoveBlockEvent(@NotNull Player player, @NotNull Location from, @NotNull Location to) {
         super(player, from, to);

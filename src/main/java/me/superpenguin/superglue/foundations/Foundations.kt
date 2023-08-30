@@ -20,7 +20,7 @@ fun CommandSender.send(msg: String, hex: Boolean = false) = sendMessage(msg.toCo
 fun String.toIntOrElse(default: Int): Int = this.toIntOrNull() ?: default
 fun String.isInt() = toIntOrNull() != null
 fun String.toEntityTypeOrNull() = runCatching { EntityType.valueOf(this) }.getOrNull()
-fun String.toMaterialOrNull() = runCatching { Material.matchMaterial(this) }.getOrNull()
+fun String.toMaterialOrNull() = Material.matchMaterial(this)
 /** @return whether the string matches exactly the name of a currently online player */
 fun String.isPlayerName() = Bukkit.getPlayerExact(this) != null
 fun String.toPlayer() = Bukkit.getPlayerExact(this)
