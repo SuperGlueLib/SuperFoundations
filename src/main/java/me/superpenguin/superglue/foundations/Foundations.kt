@@ -12,6 +12,8 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
+import java.util.*
+import kotlin.collections.HashMap
 
 /** Send a coloured message to a player */
 fun CommandSender.send(msg: String, hex: Boolean = false) = sendMessage(msg.toColor(hex))
@@ -21,6 +23,7 @@ fun String.toIntOrElse(default: Int): Int = this.toIntOrNull() ?: default
 fun String.isInt() = toIntOrNull() != null
 fun String.toEntityTypeOrNull() = runCatching { EntityType.valueOf(this) }.getOrNull()
 fun String.toMaterialOrNull() = Material.matchMaterial(this)
+fun String.toUUID() = runCatching { UUID.fromString(this) }.getOrNull()
 /** @return whether the string matches exactly the name of a currently online player */
 fun String.isPlayerName() = Bukkit.getPlayerExact(this) != null
 fun String.toPlayer() = Bukkit.getPlayerExact(this)
