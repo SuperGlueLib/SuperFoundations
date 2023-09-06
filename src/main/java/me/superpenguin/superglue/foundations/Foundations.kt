@@ -1,5 +1,6 @@
 package me.superpenguin.superglue.foundations
 
+import com.google.common.io.ByteStreams
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
@@ -67,3 +68,12 @@ fun Player.giveOrDropItem(item: ItemStack) = inventory.addItem(item).forEach { (
 
 /** Get the top-center of the block represented by this location */
 fun Location.toCenter() = Location(world, blockX + 0.5, blockY + 0.5, blockZ + 0.5, yaw, pitch)
+
+/** Sends the player to the bungeecord server specified by [servername] or prints a warning to console if it is not found */
+fun Player.connectToBungeeServer(plugin: JavaPlugin, servername: String) = runCatching {
+    val output = ByteStreams.newDataOutput().apply {
+        writeUTF("Connect")
+        writeUTF(servername)
+    }.toByteArray()
+    sendPluginMessage(plugin, "BungeeCord", output)
+}.onFailure { plugin.logger.warning("Failed to send $name to bungee server $servername, check the spelling and that the server is online") }
