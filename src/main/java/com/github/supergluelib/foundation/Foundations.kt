@@ -1,4 +1,4 @@
-package me.superpenguin.superglue.foundations
+package com.github.supergluelib.foundation
 
 import com.google.common.io.ByteStreams
 import org.bukkit.Bukkit

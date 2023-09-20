@@ -1,6 +1,6 @@
-package me.superpenguin.superglue.foundations.util
+package com.github.supergluelib.foundation.util
 
-import me.superpenguin.superglue.foundations.getYamlConfiguration
+import com.github.supergluelib.foundation.getYamlConfiguration
 import org.bukkit.Bukkit
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.plugin.java.JavaPlugin

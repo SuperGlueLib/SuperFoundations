@@ -1,4 +1,4 @@
-package me.superpenguin.superglue.foundations.misc
+package com.github.supergluelib.foundation.misc
 
 import org.bukkit.Location
 import org.bukkit.Material

@@ -1,4 +1,4 @@
-package me.superpenguin.superglue.foundations
+package com.github.supergluelib.foundation
 
 import java.text.DecimalFormat
 import kotlin.math.floor

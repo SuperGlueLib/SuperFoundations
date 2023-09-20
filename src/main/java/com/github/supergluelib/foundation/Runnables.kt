@@ -1,4 +1,4 @@
-package me.superpenguin.superglue.foundations
+package com.github.supergluelib.foundation
 
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
@@ -15,7 +15,7 @@ object Runnables {
     private fun getPlugin() = runCatching { plugin }.getOrElse { throw UninitializedPropertyAccessException("You must use Runnables.setup() in the onEnable before using this class") }
 
     fun setup(plugin: JavaPlugin) {
-        this.plugin = plugin
+        Runnables.plugin = plugin
     }
 
     fun runNextTick(code: () -> Unit) = Bukkit.getScheduler().runTaskLater(getPlugin(), code, 0)

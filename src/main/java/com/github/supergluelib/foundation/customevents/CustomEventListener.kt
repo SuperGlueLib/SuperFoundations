@@ -1,4 +1,4 @@
-package me.superpenguin.superglue.foundations.customevents
+package com.github.supergluelib.foundation.customevents
 
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
@@ -14,7 +14,7 @@ object CustomEventListener: Listener {
     private lateinit var plugin: JavaPlugin
 
     fun setup(plugin: JavaPlugin) {
-        this.plugin = plugin
+        CustomEventListener.plugin = plugin
         Bukkit.getPluginManager().registerEvents(this, plugin)
     }
 
