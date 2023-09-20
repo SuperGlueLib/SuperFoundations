@@ -3,6 +3,9 @@ package me.superpenguin.superglue.foundations
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 
+fun async(code: () -> Unit) = Runnables.async(code)
+fun runNextTick(code: () -> Unit) = Runnables.runNextTick(code)
+
 /**
  * A class implementing regular bukkit runnables but designed to be kotlin-friendly.
  */
@@ -23,5 +26,7 @@ object Runnables {
      * @param delay the time before the first execution in ticks.
      */
     fun runTimer(interval: Int, delay: Int = 0, code: () -> Unit) = Bukkit.getScheduler().runTaskTimer(getPlugin(), code, delay.toLong(), interval.toLong())
+
+    fun async(code: () -> Unit) = Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), code)
 
 }
