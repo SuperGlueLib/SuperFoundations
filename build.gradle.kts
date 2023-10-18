@@ -3,8 +3,8 @@ plugins {
     `maven-publish`
 }
 
-val plVer = "1.2.0"
-group = "me.superpenguin.superglue"
+val plVer = "1.2.1"
+group = "com.github.supergluelib"
 version = plVer
 
 repositories {
@@ -17,7 +17,7 @@ dependencies {
 }
 
 publishing.publications.create<MavenPublication>("maven") {
-    groupId = "me.superpenguin.superglue"
+    groupId = "com.github.supergluelib"
     artifactId = "superfoundations"
     version = plVer
 
