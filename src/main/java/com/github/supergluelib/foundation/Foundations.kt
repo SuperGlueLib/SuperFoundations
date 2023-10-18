@@ -1,5 +1,6 @@
 package com.github.supergluelib.foundation
 
+import com.github.supergluelib.foundation.customevents.CustomEventListener
 import com.google.common.io.ByteStreams
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -12,9 +13,30 @@ import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
+import org.bukkit.plugin.messaging.PluginMessageListener
 import java.io.File
 import java.util.*
 import kotlin.collections.HashMap
+
+object Foundations {
+    private var _plugin: JavaPlugin? = null
+    val plugin: JavaPlugin get() {
+        if (_plugin == null) throw NullPointerException("""
+            You must call Foundations#setup(plugin) before you use this class, usually in the onEnable
+            and Foundations#onDisable() after you've finished using it, usually in the onDisable()
+        """.trimIndent())
+        else return _plugin!!
+    }
+
+    fun setup(plugin: JavaPlugin) {
+        this._plugin = plugin
+        CustomEventListener.setup(plugin)
+    }
+
+    fun onDisable() {
+        Bukkit.getMessenger().unregisterOutgoingPluginChannel(plugin, "BungeeCord")
+    }
+}
 
 /** Send a coloured message to a player */
 fun CommandSender.send(msg: String, hex: Boolean = false) = sendMessage(msg.toColor(hex))
@@ -69,11 +91,19 @@ fun Player.giveOrDropItem(item: ItemStack) = inventory.addItem(item).forEach { (
 /** Get the top-center of the block represented by this location */
 fun Location.toCenter() = Location(world, blockX + 0.5, blockY + 0.5, blockZ + 0.5, yaw, pitch)
 
-/** Sends the player to the bungeecord server specified by [servername] or prints a warning to console if it is not found */
-fun Player.connectToBungeeServer(plugin: JavaPlugin, servername: String) = runCatching {
-    val output = ByteStreams.newDataOutput().apply {
-        writeUTF("Connect")
-        writeUTF(servername)
-    }.toByteArray()
-    sendPluginMessage(plugin, "BungeeCord", output)
-}.onFailure { plugin.logger.warning("Failed to send $name to bungee server $servername, check the spelling and that the server is online") }
+object PluginMessager {
+
+    init {
+        Bukkit.getMessenger().registerOutgoingPluginChannel(Foundations.plugin, "BungeeCord")
+    }
+
+    /** Sends the player to the bungeecord server specified by [servername] or prints a warning to console if it is not found */
+    fun Player.connectToBungeeServer(servername: String) = runCatching {
+        val output = ByteStreams.newDataOutput().apply {
+            writeUTF("Connect")
+            writeUTF(servername)
+        }.toByteArray()
+        sendPluginMessage(Foundations.plugin, "BungeeCord", output)
+    }.onFailure { Foundations.plugin.logger.warning("Failed to send $name to bungee server $servername, check the spelling and that the server is online") }
+}
+

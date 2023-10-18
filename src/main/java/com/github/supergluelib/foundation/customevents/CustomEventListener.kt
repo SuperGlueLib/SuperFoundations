@@ -7,14 +7,11 @@ import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.plugin.java.JavaPlugin
 
 /**
- * Run CustomEventListener#setup(JavaPlugin) to setup the listener and enable custom events
+ * Run Foundations#setup(JavaPlugin) to setup the listener and enable custom events
  */
 object CustomEventListener: Listener {
 
-    private lateinit var plugin: JavaPlugin
-
-    fun setup(plugin: JavaPlugin) {
-        CustomEventListener.plugin = plugin
+    internal fun setup(plugin: JavaPlugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin)
     }
 
