@@ -13,7 +13,6 @@ import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
-import org.bukkit.plugin.messaging.PluginMessageListener
 import java.io.File
 import java.util.*
 import kotlin.collections.HashMap
@@ -42,17 +41,23 @@ object Foundations {
 fun CommandSender.send(msg: String, hex: Boolean = false) = sendMessage(msg.toColor(hex))
 
 // A bunch of useful string methods.
+/** Convert a string to an int, or supply the default if the string is not an int */
 fun String.toIntOrElse(default: Int): Int = this.toIntOrNull() ?: default
+/** @return Whether the string represents an int such as "32" */
 fun String.isInt() = toIntOrNull() != null
+/** Returns the [EntityType] represented by this string, or null if no match is found */
 fun String.toEntityTypeOrNull() = runCatching { EntityType.valueOf(this) }.getOrNull()
+/** Returns the [Material] represented by this string, or null if no match is found */
 fun String.toMaterialOrNull() = Material.matchMaterial(this)
+/** Converts this string to a UUID, or returns null if this string does not represent a UUID */
 fun String.toUUID() = runCatching { UUID.fromString(this) }.getOrNull()
 /** @return whether the string matches exactly the name of a currently online player */
 fun String.isPlayerName() = Bukkit.getPlayerExact(this) != null
+/** Convert this name of a player into a player, or return null if none is found */
 fun String.toPlayer() = Bukkit.getPlayerExact(this)
 
 /** load a YML Configuration from a file */
-fun File.getYamlConfiguration() = YamlConfiguration.loadConfiguration(this)
+fun File.loadYamlConfiguration() = YamlConfiguration.loadConfiguration(this)
 
 /** Remove all occurences of the provided strings */
 fun String.remove(vararg sequences: String) = sequences.fold(this) {str, seq -> str.replace(seq, "") }
