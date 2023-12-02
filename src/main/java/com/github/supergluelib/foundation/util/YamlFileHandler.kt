@@ -1,12 +1,12 @@
 package com.github.supergluelib.foundation.util
 
-import com.github.supergluelib.foundation.getYamlConfiguration
+import com.github.supergluelib.foundation.loadYamlConfiguration
 import org.bukkit.Bukkit
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 
-abstract class FileHandler(private val plugin: JavaPlugin, val name: String, resource: Boolean = false) {
+abstract class YamlFileHandler(private val plugin: JavaPlugin, val name: String, resource: Boolean = false) {
     val file: File = File(plugin.dataFolder, name)
     var config: FileConfiguration
 
@@ -16,13 +16,13 @@ abstract class FileHandler(private val plugin: JavaPlugin, val name: String, res
             if (resource) plugin.saveResource(name, false)
             else file.runCatching { createNewFile() }
         }
-        config = file.getYamlConfiguration()
+        config = file.loadYamlConfiguration()
     }
 
     protected abstract fun onReload()
 
     fun reload() {
-        config = file.getYamlConfiguration()
+        config = file.loadYamlConfiguration()
         onReload()
     }
 
