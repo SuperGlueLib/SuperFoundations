@@ -1,6 +1,7 @@
 package com.github.supergluelib.foundation
 
 import com.github.supergluelib.foundation.customevents.CustomEventListener
+import com.github.supergluelib.foundation.input.InputListener
 import com.google.common.io.ByteStreams
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -30,6 +31,7 @@ object Foundations {
     fun setup(plugin: JavaPlugin) {
         this._plugin = plugin
         CustomEventListener.setup(plugin)
+        InputListener.register(plugin)
     }
 
     fun onDisable() {
