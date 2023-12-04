@@ -6,11 +6,13 @@ import java.util.*
 
 object Input {
     object BlockPlace {
-        internal val awaitingBlockInput: HashMap<UUID, (Block) -> Unit> = HashMap()
+        internal val awaiting: HashMap<UUID, (Block) -> Unit> = HashMap()
+        fun take(player: Player, whenPlaced: (Block) -> Unit) { awaiting[player.uniqueId] = whenPlaced }
+    }
 
-        fun take(player: Player, whenPlaced: (Block) -> Unit) {
-            awaitingBlockInput[player.uniqueId] = whenPlaced
-        }
+    object Chat {
+        internal val awaiting: HashMap<UUID, (String) -> Unit> = HashMap()
+        fun take(player: Player, whenChat: (String) -> Unit) { awaiting[player.uniqueId] = whenChat }
     }
 
 }
