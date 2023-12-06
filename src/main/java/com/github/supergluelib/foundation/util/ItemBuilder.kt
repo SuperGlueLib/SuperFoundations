@@ -1,6 +1,7 @@
 package com.github.supergluelib.foundation.util
 
 import com.github.supergluelib.foundation.toColor
+import com.github.supergluelib.foundation.toHashMap
 import org.bukkit.Bukkit
 import org.bukkit.Color
 import org.bukkit.Material
@@ -34,6 +35,7 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
     fun lore(lines: List<String>) = apply { this.lore = ArrayList(lines) }
     fun addLore(vararg line: String) = apply { lore = (lore ?: ArrayList()).apply { addAll(line) } }
     fun addEnchant(enchant: Enchantment, level: Int) = apply { enchants[enchant] = level }
+    fun enchants(enchants: Map<Enchantment, Int>) = apply { this@ItemBuilder.enchants = enchants.toHashMap() }
     fun hideEnchants(hide: Boolean) = apply { hideEnchants = hide }
     fun locname(locname: String) = apply { this.locname = locname }
     fun addPersistentInt(key: NamespacedKey, data: Int) = apply { persistentInts.add(key to data) }
