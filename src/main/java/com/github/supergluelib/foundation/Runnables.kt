@@ -17,7 +17,7 @@ object Runnables {
     /** Run the code in the next tick */
     fun runNextTick(code: () -> Unit) = Bukkit.getScheduler().runTaskLater(plugin, code, 0)
     /** Run the code after [ticks] ticks */
-    fun runLater(ticks: Long, code: () -> Unit) = Bukkit.getScheduler().runTaskLater(plugin, code, ticks)
+    fun runLater(ticks: Int, code: () -> Unit) = Bukkit.getScheduler().runTaskLater(plugin, code, ticks.toLong())
 
     /** Starts a timer running after every interval
      * @param interval the time between executions in ticks
