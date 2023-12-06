@@ -1,9 +1,9 @@
 plugins {
-    kotlin("jvm") version "1.9.0"
+    kotlin("jvm") version "1.9.21"
     `maven-publish`
 }
 
-val plVer = "1.3.0"
+val plVer = "1.3.1"
 group = "com.github.supergluelib"
 version = plVer
 
