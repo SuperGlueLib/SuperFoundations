@@ -8,8 +8,6 @@ import com.google.gson.stream.JsonWriter
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.World
-import org.bukkit.entity.Player
-import java.util.*
 
 @RequiresOptIn("This GSON adapter is new and may be susecptible to bugs and errors, please report any issues you find", RequiresOptIn.Level.WARNING)
 @Retention(AnnotationRetention.BINARY)
@@ -47,7 +45,7 @@ class WorldGsonAdapter(): CustomAdapter<World>() {
 }
 
 @ExperimentalGsonAdapter
-class BlockPosLocationAdapter(val world: World? = null): CustomAdapter<Location>() {
+class BlockLocationAdapter(val world: World? = null): CustomAdapter<Location>() {
     override fun register(gson: GsonBuilder): GsonBuilder = gson.registerTypeAdapter(Location::class.java, this)
     private fun JsonReader.nextNameAndInt(): Int { nextName(); return nextInt() }
     override fun readIn(reader: JsonReader): Location {
