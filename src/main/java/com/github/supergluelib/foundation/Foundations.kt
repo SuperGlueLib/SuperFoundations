@@ -71,6 +71,11 @@ fun String.remove(vararg sequences: Regex) = sequences.fold(this) { str, reg -> 
 fun ItemStack.removeOne() { amount -= 1 }
 /** @return true if the itemstack is not null and not air */
 fun ItemStack?.isValid() = (this != null) && !type.isAir
+/** Gets the name of the material in a prettier format i.e. BROWN_MUSHROOM -> Brown Mushroom */
+fun Material.formattedName() = toString()
+    .replace("_", " ")
+    .split(" ")
+    .joinToString(" ") { it[0].uppercase() + it.substring(1).lowercase() }
 
 // Map & List utils
 /** @return whether the collection contains the provided string, ignoring case */

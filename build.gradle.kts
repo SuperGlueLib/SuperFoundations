@@ -3,7 +3,7 @@ plugins {
     `maven-publish`
 }
 
-val plVer = "1.3.1"
+val plVer = "1.3.2"
 group = "com.github.supergluelib"
 version = plVer
 
