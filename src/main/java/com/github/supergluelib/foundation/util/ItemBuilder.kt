@@ -1,5 +1,6 @@
 package com.github.supergluelib.foundation.util
 
+import com.github.supergluelib.foundation.EnchantmentMapGsonAdapter
 import com.github.supergluelib.foundation.toColor
 import com.github.supergluelib.foundation.toHashMap
 import org.bukkit.Bukkit
@@ -14,16 +15,22 @@ import org.bukkit.inventory.meta.SkullMeta
 import org.bukkit.persistence.PersistentDataType
 import java.util.*
 
+/**
+ * A kotlin friendly class optimising and shortening the creation of custom itemstacks.
+ * This class can be used in conjunction with Gson to serialise ItemStacks, if the item has or may have enchants,
+ * you should register the [EnchantmentMapGsonAdapter] gson adapter.
+ */
 class ItemBuilder(private var type: Material, Name: String? = null, private var amount: Int = 1) {
+    constructor(type: Material, amount: Int): this(type, null, amount)
     var name: String? = Name
     var lore: ArrayList<String>? = null
     var locname: String? = null
-    var persistentInts: ArrayList<Pair<NamespacedKey, Int>> = ArrayList()
-    var persistentStrings: ArrayList<Pair<NamespacedKey, String>> = ArrayList()
-    var useHex = false
-    var enchants: HashMap<Enchantment, Int> = HashMap()
-    var hideEnchants: Boolean = false
-    var hideDye: Boolean = false
+    var persistentInts: HashMap<NamespacedKey, Int>? = null
+    var persistentStrings: HashMap<NamespacedKey, String>? = null
+    var useHex: Boolean? = null
+    var enchants: HashMap<Enchantment, Int>? = null
+    var hideEnchants: Boolean? = null
+    var hideDye: Boolean? = null
     var unbreakable: Boolean? = null
     var glowing: Boolean? = null
 
@@ -34,12 +41,12 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
     fun name(name: String) = apply { this.name = name; }
     fun lore(lines: List<String>) = apply { this.lore = ArrayList(lines) }
     fun addLore(vararg line: String) = apply { lore = (lore ?: ArrayList()).apply { addAll(line) } }
-    fun addEnchant(enchant: Enchantment, level: Int) = apply { enchants[enchant] = level }
+    fun addEnchant(enchant: Enchantment, level: Int) = apply { enchants?.put(enchant, level) ?: { enchants = hashMapOf(enchant to level) } }
     fun enchants(enchants: Map<Enchantment, Int>) = apply { this@ItemBuilder.enchants = enchants.toHashMap() }
     fun hideEnchants(hide: Boolean) = apply { hideEnchants = hide }
     fun locname(locname: String) = apply { this.locname = locname }
-    fun addPersistentInt(key: NamespacedKey, data: Int) = apply { persistentInts.add(key to data) }
-    fun addPersistentString(key: NamespacedKey, data: String) = apply { persistentStrings.add(key to data) }
+    fun addPersistentInt(key: NamespacedKey, data: Int) = apply { persistentInts?.put(key, data) ?: { persistentInts = hashMapOf(key to data) } }
+    fun addPersistentString(key: NamespacedKey, data: String) = apply { persistentStrings?.put(key, data) ?: { persistentStrings = hashMapOf(key to data) }  }
 
     fun hex(use: Boolean) = apply { useHex = use }
     fun unbreakable(unbreakable: Boolean) = apply { this.unbreakable = unbreakable }
@@ -53,19 +60,21 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
     fun build(): ItemStack {
         val stack = ItemStack(type, amount);
         val meta = stack.itemMeta!!
-        if (name != null) meta.setDisplayName(name!!.toColor(useHex))
-        if (lore != null) meta.lore = lore!!.map { it.toColor(useHex) }
+        if (name != null) meta.setDisplayName(name!!.toColor(useHex ?: false))
+        if (lore != null) meta.lore = lore!!.map { it.toColor(useHex ?: false) }
         locname?.let(meta::setLocalizedName)
         unbreakable?.let(meta::setUnbreakable)
-        if (persistentInts.isNotEmpty()) persistentInts.forEach { meta.persistentDataContainer[it.first, PersistentDataType.INTEGER] = it.second }
-        if (persistentStrings.isNotEmpty()) persistentStrings.forEach { meta.persistentDataContainer[it.first, PersistentDataType.STRING] = it.second }
-        if (enchants.isNotEmpty()) enchants.forEach { (enchant, level) -> meta.addEnchant(enchant, level, true) }
-        if (hideEnchants || (enchants.isEmpty() && glowing == true)) meta.addItemFlags(ItemFlag.HIDE_ENCHANTS)
-        if (glowing == true && enchants.isEmpty()) meta.addEnchant(Enchantment.OXYGEN, 1, false)
+        if (persistentInts?.isNotEmpty() == true)
+            persistentInts!!.entries.forEach { meta.persistentDataContainer[it.key, PersistentDataType.INTEGER] = it.value }
+        if (persistentStrings?.isNotEmpty() == true)
+            persistentStrings!!.entries.forEach { meta.persistentDataContainer[it.key, PersistentDataType.STRING] = it.value }
+        if (enchants?.isNotEmpty() == true) enchants!!.forEach { (enchant, level) -> meta.addEnchant(enchant, level, true) }
+        if (hideEnchants == true || (enchants?.isEmpty() == true && glowing == true)) meta.addItemFlags(ItemFlag.HIDE_ENCHANTS)
+        if (glowing == true && enchants?.isEmpty() == true) meta.addEnchant(Enchantment.OXYGEN, 1, false)
 
         if (meta is LeatherArmorMeta) {
             leathercolor?.let { meta.setColor(it) }
-            if (hideDye) meta.addItemFlags(ItemFlag.HIDE_DYE)
+            if (hideDye == true) meta.addItemFlags(ItemFlag.HIDE_DYE)
         }
 
         if (meta is SkullMeta){
@@ -74,5 +83,28 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
 
         stack.itemMeta = meta
         return stack
+    }
+
+    constructor(item: ItemStack, hex: Boolean = false): this(item.type, item.amount) {
+        val meta = item.itemMeta ?: return
+        if (meta.hasLore()) lore(meta.lore!!)
+        if (meta.hasLocalizedName()) locname(meta.localizedName)
+        if (meta.hasEnchants()) enchants(meta.enchants)
+        if (meta.hasItemFlag(ItemFlag.HIDE_ENCHANTS)) hideEnchants(true)
+        val pdc = meta.persistentDataContainer
+        pdc.keys.forEach {
+            if (pdc.has(it, PersistentDataType.STRING)) addPersistentString(it, pdc.get(it, PersistentDataType.STRING)!!)
+            if (pdc.has(it, PersistentDataType.INTEGER)) addPersistentInt(it, pdc.get(it, PersistentDataType.INTEGER)!!)
+        }
+        hex(hex)
+        if (meta.isUnbreakable) unbreakable(true)
+        if (meta.enchants.containsKey(Enchantment.OXYGEN) && meta.enchants[Enchantment.OXYGEN] == 1 && meta.hasItemFlag(ItemFlag.HIDE_ENCHANTS)) glowing(true)
+        if (meta is LeatherArmorMeta) {
+            leathercolor(meta.color)
+            if (meta.hasItemFlag(ItemFlag.HIDE_DYE)) hideDye(true)
+        }
+        if (meta is SkullMeta) {
+            if (meta.owningPlayer != null) skullOwner(meta.owningPlayer!!.uniqueId)
+        }
     }
 }
