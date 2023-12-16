@@ -95,3 +95,44 @@ class EnchantmentMapGsonAdapter(): CustomAdapter<Map<Enchantment, Int>>() {
         writer.endArray()
     }
 }
+
+class NamespacedKeyGsonAdapter(): CustomAdapter<NamespacedKey>() {
+    override fun register(gson: GsonBuilder) = gson.registerTypeAdapter(NamespacedKey::class.java, this)
+    override fun readIn(reader: JsonReader) = NamespacedKey.fromString(reader.nextString())
+    override fun writeOut(value: NamespacedKey, writer: JsonWriter) { writer.value(value.toString()) }
+}
+
+internal sealed class PersistentDataMapGsonAdapter<T>(): CustomAdapter<Map<NamespacedKey, T>>() {
+    private val token = object: TypeToken<Map<NamespacedKey, T>>(){}
+    override fun register(gson: GsonBuilder): GsonBuilder = gson.registerTypeHierarchyAdapter(token.rawType, this)
+
+    override fun readIn(reader: JsonReader): Map<NamespacedKey, T>? {
+        reader.beginObject()
+        val map = hashMapOf<NamespacedKey, T>()
+        while (reader.peek() == JsonToken.NAME) {
+            map[NamespacedKey.fromString(reader.nextName())!!] = reader.readValue()
+        }
+        reader.endObject()
+        return map
+    }
+
+    override fun writeOut(value: Map<NamespacedKey, T>, writer: JsonWriter) {
+        writer.beginObject()
+        value.forEach { (key, data) -> writer.name(key.toString()).writeValue(data) }
+        writer.endObject()
+    }
+
+    abstract fun JsonWriter.writeValue(data: T): JsonWriter
+    abstract fun JsonReader.readValue(): T
+
+    class StringAdapter: PersistentDataMapGsonAdapter<String>() {
+        override fun JsonWriter.writeValue(data: String): JsonWriter = value(data)
+        override fun JsonReader.readValue(): String = nextString()
+    }
+
+    class IntAdapter: PersistentDataMapGsonAdapter<Int>() {
+        override fun JsonWriter.writeValue(data: Int): JsonWriter = value(data)
+        override fun JsonReader.readValue() = nextInt()
+    }
+
+}
