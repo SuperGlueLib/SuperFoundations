@@ -16,8 +16,7 @@ import java.util.*
 
 /**
  * A kotlin friendly class optimising and shortening the creation of custom itemstacks.
- * This class can be used in conjunction with Gson to serialise ItemStacks, if the item has or may have enchants,
- * you should register the [EnchantmentMapGsonAdapter] gson adapter.
+ * This class can be used in conjunction with Gson to serialise ItemStacks.
  */
 class ItemBuilder(private var type: Material, Name: String? = null, private var amount: Int? = null) {
     constructor(type: Material, amount: Int?): this(type, null, amount)
@@ -107,6 +106,13 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
         }
         if (meta is SkullMeta) {
             if (meta.owningPlayer != null) skullOwner(meta.owningPlayer!!.uniqueId)
+        }
+    }
+
+    fun t() {
+        val map = hashMapOf("hi" to mutableListOf<String>())
+        map.merge("hi", mutableListOf("brandon")) { existing, newvalue ->
+            existing.apply { addAll(newvalue) }
         }
     }
 }

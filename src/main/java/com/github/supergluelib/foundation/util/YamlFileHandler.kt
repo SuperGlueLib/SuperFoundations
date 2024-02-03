@@ -14,11 +14,13 @@ abstract class YamlFileHandler(private val plugin: JavaPlugin, val name: String,
         if (!file.exists()){
             if (!file.parentFile.exists()) file.parentFile.mkdirs()
             if (resource) plugin.saveResource(name, false)
-            else file.runCatching { createNewFile() }
+            else runCatching { file.createNewFile() }
         }
         config = file.loadYamlConfiguration()
+        onReload()
     }
 
+    /** Called when the file is first loaded and for every subsequent reload, Use this to update your cache. */
     protected abstract fun onReload()
 
     fun reload() {
